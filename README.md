@@ -1,4 +1,4 @@
-d# Gravitational Wave Detection: Event GW170814 and the performance of matched filtering and χ2-consistency testing in the presence of Gaussian noise, non-Gaussianly distributed noise, and transient glitches
+# Gravitational Wave Detection: Event GW170814 and the performance of matched filtering and χ2-consistency testing in the presence of Gaussian noise, non-Gaussianly distributed noise, and transient glitches
 
 Author: Vinh Nguyen – Klein Oak High School
 
