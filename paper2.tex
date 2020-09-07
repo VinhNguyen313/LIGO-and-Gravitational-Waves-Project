@@ -23,7 +23,6 @@ letterpaper,
 \newcommand{\iu}{{i\mkern1mu}}
 \def\code#1{\texttt{#1}}
 
-\doublespacing
 \begin{document}
 
 \title{Gravitational Wave Detection:\\
@@ -33,20 +32,35 @@ Event GW170814 and the performance of matched filtering and $\chi^2$-consistency
 \affiliation{Klein Oak High School, Spring, TX 77379}
 \date{July 29, 2020}
 \begin{abstract}
-The detection of gravitational wave signals of astrophysical origins is particularly challenging because the signals are always contaminated by noise. Two of most prominent and efficient detection techniques currently used in Virgo/LIGO search pipelines are matched filtering and $\chi^2$-consistency testing. This paper investigated the performance of these two detection techniques in event GW170814 as well as in the presence of both consistently distributed noise and transient glitches. It was found that matched filtering performs best in the presence of perfect or close-perfect Gaussian noise; it can also mistake glitches for real gravitational waves if certain types of glitches are present. Additionally, it was found that $\chi^2$-consistency testing has little effects in cases where matched filtering had previously been unsuccessful. Finally, it was shown that the use of $\chi^2$-consistency testing is crucial to detecting and identifying gravitational waves in the presence of \textit{Extremely Loud} and \textit{Blip} glitches.
+The detection of gravitational wave signals of astrophysical origin is particularly challenging because the signals are always contaminated by noise. Two of most prominent and efficient detection techniques currently used in Virgo/LIGO search pipelines are matched filtering and $\chi^2$-consistency testing. This paper investigated the performance of these two detection techniques in event GW170814 as well as in the presence of both consistently distributed noise and transient glitches. It was found that matched filtering performs best in the presence of perfect or close-perfect Gaussian noise; it can also mistake glitches for real gravitational waves if certain types of glitches are present. Additionally, it was found that $\chi^2$-consistency testing has little effects in cases where matched filtering had previously been unsuccessful. Finally, it was shown that the use of $\chi^2$-consistency testing is crucial to detecting and identifying gravitational waves in the presence of \textit{Extremely Loud} and \textit{Blip} glitches.
 \end{abstract}
 
 \maketitle
 \section{Introduction}
-The existence of gravitational waves was first predicted by Albert Einstein in 1916 as a direct result of his Theory of General Relativity. Since then, gravitational wave science and detection have been a leading scientific field of interest for not just physicists, but also astronomers, geologists, material scientists, and engineers as well. With the first confirmed detection of gravitational waves from a binary black hole merger in 2015 (event GW150914), the prospects of gravitational wave science and its applications to other fields have only become brighter. As of July 2020, there exists four primary fully functioning gravitational wave detectors – the LIGO Hanford Detector in Washington, the LIGO Livingston Detector in Louisiana, the Virgo Observatory in Italy, and the KAGRA detector in Japan. 
+The existence of gravitational waves was first predicted by Albert Einstein in 1916 as a direct result of his Theory of General Relativity. Since then, gravitational wave science and detection have been a leading scientific field of interest for not just physicists, but also astronomers, geologists, material scientists, and engineers. With the first confirmed detection of gravitational waves from a binary black hole merger in 2015 (event GW150914), the prospects of gravitational wave science and its applications to other fields have only become brighter. As of July 2020, there exist five primary fully functioning gravitational wave detectors – the LIGO Hanford Detector in Washington, the LIGO Livingston Detector in Louisiana, the Virgo Observatory in Italy, the GEO600 detector in Germany and the KAGRA detector in Japan. 
 
 The detection of gravitational waves, however, poses many challenges, for their signals are extremely weak. Gravitational wave signals can be easily contaminated by noise, thereby requiring a wide range of sophisticated mathematical and data analysis techniques to be identified. This paper explores several complications in the detection of gravitational waves – specifically, it studies the detection of event GW170814 as well as the general performance of matched filtering and $\chi^2$-consistency testing in different unfavorable noise conditions present in the Virgo and LIGO gravitational wave detectors.
 
-This paper uses real Virgo/LIGO data queried from the Gravitational Wave Open Science Center (GWOSC). GWOSC is a collaborative effort between the LIGO Laboratory, the LIGO Scientific Collaboration and the Virgo Collaboration to provide the public with gravitational wave data from the two LIGO facilities (Hanford, WA and Livingston, LA) as well the Virgo Observatory in Cascina, Italy. The structure of this paper is as follows. \textit{Section \ref{background}} provides detailed background information necessary for the methods undertaken in this paper. Specifically, \textit{sub-section \ref{gw and ligo}} discusses gravitational waves, its detection and current detector technology while \textit{sub-section \ref{data anal}} addresses data analysis details such as  the Fourier transform, noise characteristics, matched filtering and $\chi^2$-consistency testing. \textit{Section \ref{method}} gives a detailed description of this paper's methodology and the steps undertaken. \textit{Section \ref{results}} provides the paper's preliminary results in addition to data analysis. \textit{Section \ref{conclusions}} presents the study's conclusions and proposals for possible future research directions. Finally, \textit{section \ref{summary}} gives a brief overall summary of this paper's content. 
+This paper uses real Virgo/LIGO data queried from the Gravitational Wave Open Science Center (GWOSC). GWOSC is a collaborative effort between the LIGO Laboratory, the LIGO Scientific Collaboration and the Virgo Collaboration to provide the public with gravitational wave data from the two LIGO facilities (Hanford, WA and Livingston, LA) as well the Virgo Observatory in Cascina, Italy. The structure of this paper is as follows. \textit{Section \ref{background}} provides detailed background information necessary for the methods undertaken in this paper. Specifically, \textit{sub-section \ref{gw and ligo}} discusses gravitational waves, their detection and current detector technology while \textit{sub-section \ref{data anal}} addresses data analysis details such as  the Fourier transform, noise characteristics, matched filtering and $\chi^2$-consistency testing. \textit{Section \ref{method}} gives a detailed description of this paper's methodology and the steps undertaken. \textit{Section \ref{results}} provides the paper's results in addition to data analysis. \textit{Section \ref{conclusions}} presents the study's conclusions and proposals for possible future research directions. Finally, \textit{section \ref{summary}} gives a brief overall summary of this paper's content. The source code in LaTeX for this paper can be found on the Github repository \href{https://github.com/VinhNguyen313/LIGO-and-Gravitational-Waves-Project}{\textbf{\textit{here}}}.
 
 \section{Background} \label{background}
 \subsection{Gravitational waves and the Laser Interferometer Gravitational-Wave Observatory (LIGO)} \label{gw and ligo}
-In 1915, Albert Einstein first published his theory of general relativity, describing space and time as one four-dimensional concept called \textit{``space-time''} \cite{maggiore_2008}, In this theory, he describes the force of gravity not as an inherent property that a massive body possesses, but rather as a byproduct of curved space-time. To put this more simply, we can say that a body with mass warps space-time, thereby creating a gravitational field surrounding it, affecting other bodies \cite{carlip}. To understand this idea, we can make use of an analogy: suppose that the fabric of space-time is a rubber sheet, and that any object with mass on it warps the surrounding area (FIG. 1.), hence creating a gravitational field. It follows from Einstein's Theory of Relativity that rapid changes in the curvature of space-time would produce ripples, called \textit{gravitational waves} (abbreviated as GW), that propagate outward at the speed of light  \cite{JSTORLIGO}.
+\subsubsection{Gravitational waves and their detection}
+In 1915, Albert Einstein first published his theory of general relativity, describing space and time as one four-dimensional concept called \textit{``space-time''} \cite{maggiore_2008}, In this theory, he describes the force of gravity not as an inherent property that a massive body possesses, but rather as a byproduct of curved space-time. To put this more simply, we can say that a body with mass warps space-time, thereby creating a gravitational field surrounding it, affecting other bodies \cite{carlip}. To understand this idea, we can make use of an analogy: suppose that the fabric of space-time is represented by a rubber sheet, and that any object with mass on it warps the surrounding area (FIG. 1), hence creating a gravitational field. It follows from Einstein's Theory of Relativity that rapid changes in the curvature of space-time (specifically through a changing quadrupole mass distribution) would produce ripples, called \textit{gravitational waves} (abbreviated as GW), that propagate outward at the speed of light  \cite{JSTORLIGO}. On a astronomical scale, sources of gravitational waves can be classified into three distinct classes \cite{blair_howell_ju_zhao_2012}: 
+
+\begin{enumerate}
+\item Burst Sources
+
+Examples of burst sources include the final coalescence of compact binary star systems, and asymmetric supernovae. The binary coalescence events can consist of binary neutron stars, binary black holes, or neutron star–black hole
+binaries. Note that a burst signal consists of a very short single event; thereby it usually has a broad bandwidth, roughly determined by the
+reciprocal of the event duration \cite{blair_howell_ju_zhao_2012}.
+\item Narrow Band Sources
+
+Examples of narrow band sources include the rotation of single non-axisymmetric stars such as pulsars, accreting neutron stars, and binary star systems far from coalescence. Gravitational waves from these sources are also generally weaker than those originating from burst sources \cite{blair_howell_ju_zhao_2012}.
+\item Stochastic Background Sources
+
+Gravitational waves from these sources are remnants from the early universe after the Big Bang. They can be produced from the combined effects of weak periodic sources throughout the Galaxy, from a large population of burst sources at very large distances, or from the other cosmological events mentioned above.
+\end{enumerate}
 
 \begin{figure}[t]
 \includegraphics[width=8cm]{genral.png}
@@ -79,6 +93,30 @@ For gravitational waves passing through the test masses, the fractional differen
 \begin{equation}
 h(t) = F_\times h_\times (t) + F_+ h_+ (t)
 \end{equation}
+\subsubsection{LIGO: History and Prospects}
+
+As briefly mentioned previously, LIGO (short for Laser Interferometer Gravitational-wave Observatory) is a large-scale scientific collaboration between the California Institute of Technology and the Massachusetts Institute of Technology designed to detect gravitational waves, thereby verifying Einstein's Theory of General Relativity. 
+
+In 1987, the Caltech/MIT LIGO team submitted a joint proposal to the US National Science Foundation to build two LIGO sites with the current technology; then, the initial sites would be followed by the construction of more advanced interferometers with higher probabilities of detecting gravitational waves. In 1990, the National Science Foundation approved the proposal; a year after that, Congress appropriated funding for the construction project. In 1992, NSF and Caltech signed a cooperative agreement for the management of LIGO, choosing Hanford, Washington and Livingston, Louisiana as the first sites for LIGO’s interferometers. The reason for building two sites, instead of one, is that if one interferometer detects any promising data, the other one has to as well in order for the data to be considered reliable for any detections.
+
+
+In 1997, LIGO Director Barry Barish decided to split the LIGO Project into two entities:
+
+\begin{enumerate}[nolistsep]
+\item LIGO Laboratory at Caltech,
+MIT, Hanford and Livingston which is responsible for LIGO operations and advanced interferometer
+R\&D.
+\item The LIGO Scientific Collaboration (LSC) which is responsible for coordinating LIGO's  scientific research and data analysis, and for expanding LIGO to scientists beyond Caltech and MIT.
+\end{enumerate} 
+
+The two observatories were completed in the fall of 1999, with the initial interferometers up and working from 2002-2010. During this time, there were a series of six ``science runs'' called S1, S2,..., S6. LIGO first achieved its promised design sensitivity in science run S5 (2005-2007). After S5, LIGO received a series of enhancements, called ``eLIGO'', improving its performance by 20\% \cite{jstortechnical}. Then, to further upgrade LIGO, another construction project called Advanced LIGO (aLIGO) began in 2008, two years before initial LIGO was retired. Although initial LIGO and eLIGO did not successfully detect any gravitational waves, advanced LIGO did.
+
+
+The construction of advanced LIGO at both sites (Hanford and Livingston) was completed in 2015. Its first run was  called O1 spanning 3 months in the fall of 2015 \cite{jstortechnical}. Very fortunately, on September 14, 2015 at 09:50:45 UTC, aLIGO detected gravitational waves from a binary merger of two black holes with masses 29 and 36 times our Sun \cite{abbott}. This event was name GW150914 (GW stands for gravitational waves and the numbers represent the date) The results were subsequently published in the \textit{Physical Review Letters} on 11 February 2016, winning LIGO's pioneers (Kip Thorne, Rainer Weiss, Barry Barish) a Nobel Prize in Physics in 2017. About three months later, on December 26, 2015 at 03:38:53 UTC, another event was detected; this time, it is from a 22-solar-mass (22 times the mass of our Sun) Binary Black Hole Coalescence \cite{GW151226}.
+
+Following O1, O2 ran from 30 November 2016 to 25 August 2017, with Livingston exceeding O1's sensitivity by 15–25\% sensitivity \cite{collaboration2019open}, and with Hanford's sensitivity remaining around O1's. During LIGO's O2 run, another detection was confirmed as gravitational waves. On January 4, 2017 at 10:11:58 UTC, a binary black hole coalescence of 50-solar-mass was detected \cite{GW170104}. The third observing run, O3, was started on April 1, 2019 and ended on March 23, 2020 \cite{clavin_abazorius_conti_2019}.
+
+Not only does LIGO and its detection of gravitational waves provide provide experimental confirmations of Einstein's Theory of General Relativity, it also opens entire new windows of application in other fields such as astronomy and fundamental physics. For example, gravitational waves provide a astronomers with new tools of discovering cosmological events for which traditional `electromagnetic means' cannot be used, such as black holes.    \cite{JSTORDetecting} Furthermore, gravitational waves can also contribute to pressing questions in fundamental physics such as the hierarchy problem, singularities and vacuum energy \cite{Barack_2019}.
 
 \subsection{LIGO Data Analysis and Conventions} \label{data anal}
 \subsubsection{The Fourier Transform}
@@ -102,7 +140,7 @@ The time-domain sequence $f[n]$ can be then obtained from the frequency-domain s
 f[n]=\frac{1}{N}\sum _{n=0}^{N-1}\widetilde{f}[n]\cdot e^{{\frac {2\pi}{N}\iu kn}}
 \end{equation}
 
-Since we are working with discrete-valued sequences, performing a DFT would give rise to what we call \textit{spectral leakages}. When the Fourier Transform is applied onto a finite, non-periodic data segment (i.e.\ Virgo/LIGO data), false frequency amplitudes might occur. The reason for this is that since the transformation is discrete in nature, frequencies that lies in between or across multiple frequency intervals can falsely create high amplitudes. Thus, to minimize this, we always apply a windowing function to data – tapering the data segment's ends, making it periodic – whenever the use of the DFT is required (note that windowing does not decrease spectral leakage, but rather re-distributes the leakage effect so that it causes the least harm). In this paper, I used a computer algorithm that implements the Discrete Fourier Transform called the Fast Fourier Transform (FFT) which is included within the Python PyCBC library \cite{numpy}.
+Since we are working with discrete-valued sequences, performing a DFT would give rise to what we call \textit{spectral leakages}. When the Fourier Transform is applied onto a finite, non-periodic data segment (i.e.\ Virgo/LIGO data), false frequency amplitudes might occur. The reason for this is that since the transformation is discrete in nature, sudden sharp changes at frequency bin edges when the data are not periodic can falsely create high amplitudes. Thus, to minimize this, we always apply a windowing function to data – tapering the data segment's ends, making it periodic – whenever the use of the DFT is required (note that windowing does not decrease spectral leakage, but rather re-distributes the leakage effect so that it causes the least harm). In this paper, I used a computer algorithm that implements the Discrete Fourier Transform called the Fast Fourier Transform (FFT) which is included within the Python PyCBC library \cite{numpy}.
 
 \begin{figure}[!tbp]
   \centering
@@ -146,44 +184,53 @@ Since we are working with discrete-valued sequences, performing a DFT would give
 \end{figure}
 
 \subsubsection{Noise characteristics}
-Being able to reach a strain sensitivity of $10^{-23}/\sqrt{\text{Hz}}$ \cite{sensitivity} means Virgo/LIGO's interferometers are extremely sensitive to any changes in the arm lengths – which can be caused by distorted space-time due to gravitational waves, or by vibrations that move the test masses. Thus, recorded signal $s(t)$ includes not only gravitational waves, but also unwanted vibrations from other sources as well \cite{ultimate}. Any unwanted noise, even on the smallest of scales, can still significantly interfere with data recorded by Virgo/LIGO's interferometers. Virgo/LIGO noise comes from many sources, but some examples include seismic noise due to motions of the Earth's surface, thermal noise at the molecular level affecting the test masses, and quantum shot noise at high frequencies caused by the quantum nature of light \cite{blair_howell_ju_zhao_2012}.
+Being able to reach a strain sensitivity of $10^{-23}/\sqrt{\text{Hz}}$ \cite{sensitivity} means Virgo/LIGO's interferometers are extremely sensitive to any changes in the arm lengths – which can be caused by distorted space-time due to gravitational waves, or by vibrations that move the test masses. Thus, recorded signal $s(t)$ includes not only gravitational waves, but also unwanted vibrations from other sources as well \cite{ultimate}. Any unwanted noise, even on the smallest of scales, can still significantly interfere with data recorded by Virgo/LIGO's interferometers. Virgo/LIGO noise comes from many sources, but some examples include seismic noise, thermal noise, and shot noise.  \cite{blair_howell_ju_zhao_2012}.
 
+Seismic noise is noise induced by the motion of the Earth's surface. It is  most prevalent in lower frequencies and can be caused by a multitude of factors, low-level earthquakes, ocean waves, and even human activities \cite{blair_howell_ju_zhao_2012}.
+
+LIGO's mirror's thermal noise falls broadly into two categories of sources \cite{rao_libbrecht_2003}:
+\begin{enumerate}[nolistsep]
+\item Intrinsic thermal noise, induced by thermal forcing from internal fluctuations, causing fluctuations in mirror material properties such as length and index of refraction.
+\item Extrinsic thermal noise, induced by externally imposed temperature variations that drive thermal fluctuations.One example include mirrors absorbing heat from the laser beams, thereby causing length changes by thermal expansion.
+\end{enumerate}
+
+At frequencies above 100Hz, the most prominent noise is called \textit{shot noise}. Shot noise is caused by the quantum nature of light, creating randomness in the arrival times of photons on the beam splitter.
 
 In order to extract buried gravitational wave signals from noise, we must first understand the statistical properties of the noise. Noise is said to be stationary if its statistical properties do not significantly change over time. Another important noise characteristic is its Gaussianity. Given \textit{`Gaussian'} noise with a time-series function $n(t)$, both the real and imaginary components of its Fourier Transform $\widetilde{n}(f)$ follow the normal distribution \cite{yamamoto}; that is, $\Re[\widetilde{n}(f)]$ and  $\Im{[\widetilde{n}(f)]}$ have a probability density function (PDF) of:
 \begin{equation}
-    p(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp{\left(-\frac{1}{2}\frac{(x-\mu)^2}{\sigma^2}\right)}
+    p(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp{\left[-\frac{1}{2}\frac{(x-\mu)^2}{\sigma^2}\right]}
 \end{equation}
-where $\sigma^2$ is the sample variance and the mean $\mu = 0$. By the Central Limit Theorem in statistics, a set of random noise sample naturally tends to the Gaussian distribution if sufficiently large data samples were taken \cite{jaranowski2007gravitationalwave}. Nonetheless, real Virgo/LIGO noise can still deviate from this theoretical normality. Aside from the Gaussian distribution, noise can also follow a variety of different probability density distributions such as the Poisson distribution or the Laplace distribution. Although it is not common in real-life Virgo/LIGO operations that these noise models are present, this paper still considers the case of Laplacian noise for theoretical analysis purposes. Furthermore, there also exists abrupt, transient noise sources of, sometimes, unknown origins called glitches \cite{ultimate}. Glitches can be grouped into a variety of classifications according Gravity Spy's \textit{`Field Guide'} \cite{gravityspy}. In this paper, we only primarily discuss five types of glitches: \textit{Extremely Loud}, \textit{Scattered Light}, \textit{Power Line}, \textit{Whistle}, and \textit{Blip}. \textit{Extremely Loud} is a broad classification for major detector disturbances such as photodiode saturation, causing loud and high energy transient noise bursts. \textit{Scattered Light} glitches are caused by malfunctions in the optical mechanisms of Virgo/LIGO; they look like upward humps and are particularly harmful in searching for binary inspirals \cite{gravityspy}. The third classification of glitches is called \textit{Power Line}; \textit{Power Line} glitches are caused by electrical equipments such as air compressors that use alternating current (AC). The fourth classification is called \textit{Whistle} glitches; they are usually reverse V-shaped and are caused by radio signals \cite{gravityspy}. Finally, \textit{Blip} glitches are very short duration ($\approx 40$ms) noise bursts at frequencies between 30 and 500 Hz. As of currently, there are no known causes and thus \textit{Blip} glitches are the most damaging to the detection of gravitational waves \cite{gravityspy}. It is worth pointing out that over short time intervals, though, Virgo/LIGO noise can still be reasonably approximated to be Gaussian and stationary \cite{collaboration2019open}.
+where $\sigma^2$ is the sample variance and the mean $\mu = 0$. By the Central Limit Theorem in statistics, a set of random noise sample naturally tends to the Gaussian distribution if sufficiently large data samples were taken \cite{jaranowski2007gravitationalwave}. Nonetheless, real Virgo/LIGO noise can still deviate from this theoretical normality. Aside from the Gaussian distribution, noise can also follow a variety of different probability density distributions such as the Poisson distribution or the Laplace distribution. Although it is not common in real-life Virgo/LIGO operations that these noise models are present, this paper still considers the case of Laplacian noise for theoretical analysis purposes. Furthermore, there also exists abrupt, transient noise sources of, sometimes, unknown origins called glitches \cite{ultimate}. Glitches can be grouped into a variety of classifications according Gravity Spy's \textit{`Field Guide'} \cite{gravityspy}. In this paper, we only primarily discuss five types of glitches: \textit{Extremely Loud}, \textit{Scattered Light}, \textit{Power Line}, \textit{Whistle}, and \textit{Blip}. \textit{Extremely Loud} is a broad classification for major detector disturbances such as photodiode saturation, causing loud and high energy transient noise bursts. \textit{Scattered Light} glitches are caused by malfunctions in the optical mechanisms of Virgo/LIGO; they look like upward humps and are particularly harmful in searching for binary inspirals \cite{gravityspy}. The third classification of glitches is called \textit{Power Line}; these glitches are caused by electrical equipments such as air compressors that use alternating current (AC). The fourth classification is called \textit{Whistle} glitches; they are usually reverse V-shaped and are caused by radio signals \cite{gravityspy}. Finally, \textit{Blip} glitches are very short duration ($\approx 40$ms) noise bursts at frequencies between 30 and 500 Hz. As of currently, there are no known causes and thus \textit{Blip} glitches are the most damaging to the detection of gravitational waves \cite{gravityspy}. It is worth pointing out that over short time intervals, though, Virgo/LIGO noise can still be reasonably approximated to be Gaussian and stationary \cite{collaboration2019open}.
 
 \begin{widetext}
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{gaussian -21 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Gaussian noise scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 20.0$}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Gaussian noise scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 20.0$}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 gaussian zoomed.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Gaussian noise scaled down by a factor of $10^{-21}$. A strong dip toward unity is clearly seen at the expected time $t=35s$.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Gaussian noise scaled down by a factor of $10^{-21}$. A strong dip toward unity is clearly seen at the expected time.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 gaussian.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Gaussian noise scaled down by a factor of $10^{-21}$, zoomed in to just the two-second interval between the time of expected signal.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Gaussian noise scaled down by a factor of $10^{-21}$, zoomed in to just the two-second interval between the time of expected signal.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{laplacian b=1 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Laplacian noise with $b=1$, scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 12.6$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Laplacian noise with $b=1$, scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 12.6$.}
 
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 laplace b=1 zoomed.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=1$ scaled down by a factor of $10^{-21}$. A strong dip toward unity is seen at time $t = 35.0$s with climbing values just around it.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=1$ scaled down by a factor of $10^{-21}$. A strong dip toward unity is seen with climbing values just around it.}
 \centering
 \end{figure} 
 \end{widetext}
@@ -192,20 +239,20 @@ where $\sigma^2$ is the sample variance and the mean $\mu = 0$. By the Central L
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 laplace b=1.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=1$ scaled down by a factor of $10^{-21}$. The graph is zoomed in to show just the two-second time interview around the time of expected signal. A strong dip toward unity is seen at time $t = 35.0$s.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=1$ scaled down by a factor of $10^{-21}$. The graph is zoomed in to show just the two-second time interval around the time of expected signal. A strong dip toward unity is seen.}
 \centering
 \end{figure} 
 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{laplacian b=2 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Laplacian noise with $b=2$, scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 6.1$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Laplacian noise with $b=2$, scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 6.1$.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 laplace b=2 zoomed.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=2$ scaled down by a factor of $10^{-21}$. A small dip toward unity is seen at time $t = 35.0$s.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=2$ scaled down by a factor of $10^{-21}$. A small dip toward unity is seen.}
 \centering
 \end{figure} 
 \end{widetext}
@@ -225,20 +272,20 @@ where $\sigma$ is a normalization factor is computed from \cite{findchirp}
 
  Notice that here, the template waveform is computed using a set of parameters of the astrophysical source (e.g.\ the total mass, the spins, the initial frequency, etc of a binary inspiral). The goal of the matched filtering search process is to see which template would give the highest SNR $\rho (t)$, and thus is mostly likely to be the strain signal in the data stream. 
  
-In the presence of non-Gaussian and/or non-stationary noise and/or glitches, matched filtering does not perform as well as expected since the filter itself is derived from Gaussian and stationary noise. A detailed mathematical derivation of the matched filter from a stationary, Gaussian noise model can be found in \textit{Brown (2007)} \cite{brown2007searching}.
+In the presence of non-Gaussian and/or non-stationary noise and/or glitches, matched filtering does not perform as well as expected, since the filter itself is derived from Gaussian and stationary noise. A detailed mathematical derivation of the matched filter from a stationary, Gaussian noise model can be found in \textit{Brown (2007)} \cite{brown2007searching}.
 
 
 There are several ways of incorporating matched filtering into a computer program that analyzes LIGO's signal. In this paper, I only make use of the matched filtering algorithm implemented in the open-source Python software package PyCBC \cite{pycbc}. This algorithm is based on the FINDCHIRP algorithm presented above and in \cite{findchirp}.
 \begin{widetext}
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 laplace b=2.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=2$ scaled down by a factor of $10^{-21}$. The graph is zoomed in to show just the two-second time interview around the time of expected signal. A relatively weak dip toward unity is seen at time $t = 35.0$s.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=2$ scaled down by a factor of $10^{-21}$. The graph is zoomed in to show just the two-second time interval around the time of expected signal. A relatively weak dip toward unity is seen.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{laplacian b=3 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Laplacian noise with $b=3$, scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 21.7$s with SNR $\rho = 4.6$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from perfectly Laplacian noise with $b=3$, scaled down by a factor of $10^{-21}$. A signal peak was detected at time $t = 21.7$s with SNR $\rho = 4.6$.}
 \centering
 \end{figure}
 \end{widetext}
@@ -247,7 +294,7 @@ There are several ways of incorporating matched filtering into a computer progra
 
 As described in the previous section on matched filtering, the algorithm breaks down in the presence of spurious noise sources such as glitches and non-Gaussian and/or non-stationary noise. When this happens, matched filtering gives rise to elevated signal-to-noise peaks that are due to noise instead of gravitational waves of astrophysical origins, further complicating the detection data analysis pipeline. To address this issue, many existing detection pipelines, such as the PyCBC pipeline \cite{veto}, employ the use of signal consistency testing to distinguish between real signals and false ones due to noise. There are different methods to perform consistency testing on Virgo/LIGO data. In this paper, we make use of the $\chi^2$ time-frequency discriminator test described with great details in \textit{Allen (2005)} \cite{Allen_2005} and implemented in PyCBC's search pipelines \cite{pycbc}. The general purpose of the $\chi^2$ test is to see how much different ranges of frequencies of the template waveform contribute to the signal-to-noise ratio $\rho(t)$. The overall algorithm goes as follows. We first divide our template up into $p$ frequency sub-intervals (or\textit{ frequency bins}) $\Delta f_1,\Delta f_2,..., \Delta f_p$ with corresponding signal-to-noise ratios $\rho_1,\rho_2,...,\rho_p$. Then, we compute the extent to which a particular frequency bin contributes to $\rho(t)$ by calculating a $\chi^2$ test statistic as follows:
 \begin{equation} 
-    \chi^2 = \sum^p_{i=0}\left(\left|\rho_i - \frac{\rho}{p}\right|\right)^2
+    \chi^2 = \sum^p_{i=0}\left(\rho_i - \frac{\rho}{p}\right)^2
 \end{equation}
 where $\chi^2$ has a classical $\chi^2$ probability density distribution with degrees of freedom $\nu = 2(p-1)$ since the signal-to-noise ratio $\rho$ is a complex valued number. If the template matches closely with signal-to-noise output at a certain bin, the $\chi^2$ test statistic should be close to $\nu$. In this paper, we will be normalizing $\chi^2$ as follows 
 \begin{equation}
@@ -269,25 +316,25 @@ Note that this process of re-weighing the SNR down-weighs $\rho$ where it is not
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 laplace b=3 zoomed.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=3$ scaled down by a factor of $10^{-21}$. A very weak dip toward unity is seen at time $t = 35.0$s.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=3$ scaled down by a factor of $10^{-21}$. A very weak dip toward unity is seen.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 laplace b=3.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=3$ scaled down by a factor of $10^{-21}$. The graph is zoomed in to show just the two-second time interview around the time of expected signal. A tiny dip toward unity is seen at time $t = 35.0$s.}
+\caption{The resulting $\chi^2_r$ statistic for perfectly Laplacian noise with $b=3$ scaled down by a factor of $10^{-21}$. The graph is zoomed in to show just the two-second time interval around the time of expected signal.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{glitch loud 69 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from Glitch 1. A signal peak was detected at time $t = 17.7$s with SNR $\rho = 305.0$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the injected template signal from Glitch 1. A signal peak was detected at time $t = 17.7$s with SNR $\rho = 305.0$.}
 \centering
 \end{figure}
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{glitch loud 02 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from Glitch 2. A signal peak was detected at time $t = 17.7$s with SNR $\rho = 294.6$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the injected template signal from Glitch 2. A signal peak was detected at time $t = 17.7$s with SNR $\rho = 294.6$.}
 \centering
 \end{figure}
 
@@ -295,17 +342,17 @@ Note that this process of re-weighing the SNR down-weighs $\rho$ where it is not
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 glitch 1 zoomed.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 1. $\chi_r^2(t)$ is extremely large and fluctuates frequently with no apparent dip near the expected time $t=35$s.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 1. $\chi_r^2(t)$ is extremely large and fluctuates frequently with no apparent dip near the expected time.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 glitch 1.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 1. The graph is zoomed in to show just the two-second time interview around the time of expected signal. $\chi_r^2(t)$ is extremely large and no apparent dip near the expected time $t=35$s was found.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 1. The graph is zoomed in to show just the two-second time interval around the time of expected signal. $\chi_r^2(t)$ is extremely large and no apparent dip near the expected time was found.}
 \centering
 \end{figure} 
 
-The following \textit{subsection A} discusses the methodology used in the performance evaluation of matched filtering and $\chi^2$-consistency testing in the presence of noise with known distributions as well as transient glitches. Then, in \textit{subsection B}, I provide the procedures undertaken in demonstrating the performance of matched filtering and $\chi^2$-consistency testing for a \textit{Blip} glitch found near event GW170814. All data analysis techniques (matched filtering and $\chi^2$-consistency testing) were implemented through the PyCBC software package \cite{pycbc}. All Python script implementation of this paper's methodology can be found at \footnote{V. Nguyen, Google Colab notebook for signal matched filtering and chi-squared consistency testing, \href{https://colab.research.google.com/drive/10q3SdhNjWyoZaVPdLqyoCEsSovplvMrK?authuser=2#scrollTo=7cafQoPiH5Sy}{(2020)}. URL: \url{https://colab.research.google.com/drive/10q3SdhNjWyoZaVPdLqyoCEsSovplvMrK?usp=sharing}}.
+The following \textit{subsection A} discusses the methodology used in the performance evaluation of matched filtering and $\chi^2$-consistency testing in the presence of noise with known distributions as well as transient glitches. Then, in \textit{subsection B}, I provide the procedures undertaken in demonstrating the performance of matched filtering and $\chi^2$-consistency testing for a \textit{Blip} glitch found near event GW170814. All data analysis techniques (matched filtering and $\chi^2$-consistency testing) were implemented through the PyCBC software package \cite{pycbc}. All Python script implementation of this paper's methodology can be found \href{https://colab.research.google.com/drive/10q3SdhNjWyoZaVPdLqyoCEsSovplvMrK?usp=sharing}{here} or at  \footnote{V. Nguyen, Google Colab notebook for signal matched filtering and chi-squared consistency testing, \href{https://colab.research.google.com/drive/10q3SdhNjWyoZaVPdLqyoCEsSovplvMrK?usp=sharing}{(2020)}. URL: \url{https://colab.research.google.com/drive/10q3SdhNjWyoZaVPdLqyoCEsSovplvMrK?usp=sharing}}.
 
 \subsection{Performance of matched filtering and $\chi^2$-consistency testing in different noise conditions}
 
@@ -319,50 +366,50 @@ In this paper, I considered two main types of noise distributions – Laplacian 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{reweighted glitch 1.png}
-\caption{This figure shows the resulting reweighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 1.}
+\caption{The resulting reweighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 1.}
 \centering
 \end{figure} 
 
 \begin{figure}
 \includegraphics[width = .9\textwidth]{chi2 glitch 2 zoomed.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 2 zoomed out to the entire search time interval.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 2 zoomed out to the entire search time interval.}
 \centering
 \end{figure}
 
-Pure Gaussian noise was generated via the Python NumPy package's \code{random.normal} method then scaled down by a factor of $10^{-21}$ \cite{numpy}. As for the Laplacian noise, the \code{random.laplace} method was used. It was then scaled down accordingly similar to the Gaussian case. These noise stretches are all 50 seconds in length. Their sampling rate, and all subsequent time-series data described in this paper are $4096$ Hz – down-sampled from LIGO's original $16384$ Hz sampling rate.
+Pure Gaussian noise was generated via the Python NumPy package's \code{random.normal} method then scaled down by a factor of $10^{-21}$ \cite{numpy}. For the Laplacian noise, the \code{random.laplace} method was used. It was then scaled down accordingly similar to the Gaussian case. These noise stretches are all 50 seconds in length. Their sampling rate, and all subsequent time-series data described in this paper are $4096$ Hz.
 
 \begin{widetext}
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 glitch 2.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 2. The graph is zoomed in to show just the two-second time interview around the time of expected signal. $\chi_r^2(t)$ is moderately large with a very small dip toward unity at the expected time $t=35$s.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 2. The graph is zoomed in to show just the two-second time interval around the time of expected signal. $\chi_r^2(t)$ is moderately large with a very small dip toward unity at the expected time.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{reweighted glitch 2.png}
-\caption{This figure shows the resulting reweighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 2. It can be seen that there is a moderately distinct $\hat{\rho}(t)$ peak at time $t=35$s with a value of $\hat{\rho}(t)=9.0$}
+\caption{The reweighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 2. It can be seen that there is a moderately distinct $\hat{\rho}(t)$ peak at time $t=35$s with a value of $\hat{\rho}(t)=9.0$}
 \centering
 \end{figure}
 \end{widetext}
 
 \begin{figure}[t]\label{snr 3}
 \includegraphics[width = .9\textwidth]{glitch 3 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from Glitch 3. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 20.9$.}
+\caption{The cropped SNR $\rho(t)$ after matched filtering was applied to recover the injected template signal from Glitch 3. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 20.9$.}
 \centering
 \end{figure}
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{chi2 glitch 3.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 3. The graph is zoomed in to show just the two-second time interview around the time of expected signal. There is a moderately strong dipc toward unity at the expected time $t=35$s.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 3. The graph is zoomed in to show just the two-second time interval around the time of expected signal. There is a moderately strong dip toward unity at the expected time.}
 \centering
 \end{figure} 
 
 Then, I created a 50-second time-series template using post-Newtonian approximation theory (a method of approximating Einstein's field equations). The time-series template generation was done using PyCBC's \code{get\_td\_waveform} method; I also only used the plus polarization of the template waveform since this paper studies only the performance of signal extraction algorithms, not the waveforms themselves. The template waveform was of a binary black hole inspiral with masses 30 $M$\textsubscript{\(\odot\)} and 23 $M$\textsubscript{\(\odot\)} at an effective distance of 500 Mpc and initial frequency of 14 Hz. The waveform and was created using the `IMRPhenomD' model as the approximant. This template waveform in shown in FIG. 4.
 
 
-I then proceeded to zero-pad the template so that its length matches the length of the 50-second stretch of noise. Afterwards, I `rolled' the templates so that they start at time $t=35$s in the 50-second stretch of data. A signal injection was then carried out to inject the template waveforms into the pure 50-second noise stretch. 
+I then proceeded to zero-pad the template so that its length matches the length of the 50-second stretch of noise. Afterwards, I shifted the templates so that they start at time $t=35$s (using the \code{roll} method) in the 50-second stretch of data. A signal injection was then carried out to inject the template waveforms into the pure 50-second noise stretch. 
 
-Afterwards, I estimated the PSD of the data. Then, I applied the PyCBC matched filtering algorithm using the \code{matched\_filter} method. The signal-to-noise ratio (SNR) $\rho (t)$ computed from the matched filtering algorithm was then cropped by 10 seconds on both ends. The reason for this is that applying the matched filter on a data segment of finite length using an estimated PSD gives rise to `edge effects'. In simplest terms, these `edge effects' give extremely high, false SNR peaks near the edges that can be mistaken for gravitational wave signal; thus, $\rho(t)$ needed to be trimmed on both ends. Then finally, I applied the $\chi^2$-consistency test using 40 frequency bins on this trimmed SNR $\rho(t)$ and proceeded to re-weigh it to find $\hat{\rho}(t)$ as described in \textit{subsection \ref{chisqaured}}. Using the cropped SNR $\rho(t)$ as well as the results of the $\chi^2$ test, I could then analyze them to evaluate the search's performance. 
+Afterwards, I computed an estimtae of the PSD of the data. Then, I applied the PyCBC matched filtering algorithm using the \code{matched\_filter} method. The signal-to-noise ratio (SNR) $\rho (t)$ computed from the matched filtering algorithm was then cropped by 10 seconds on both ends. The reason for this is that applying the matched filter on a data segment of finite length using an estimated PSD gives rise to `edge effects'. In simplest terms, these `edge effects' give extremely high, false SNR peaks near the edges that can be mistaken for gravitational wave signal; thus, $\rho(t)$ needed to be trimmed on both ends. Then finally, I applied the $\chi^2$-consistency test using 40 frequency bins on this trimmed SNR $\rho(t)$ and proceeded to re-weigh it to find $\hat{\rho}(t)$ as described in \textit{subsection \ref{chisqaured}}. Using the cropped SNR $\rho(t)$ as well as the results of the $\chi^2$ test, I could then analyze them to evaluate the search's performance. 
 
 \subsubsection{Performance in the presence of glitches}
 
@@ -380,19 +427,19 @@ The last aspect of this study is to evaluate the performance of matched filterin
 \item Glitch 5: A \textit{Whistle} glitch found at the Livingston detector on April 23, 2017, 03:08:21 UTC (GPS time 1176952119).
 \end{itemize}
 
-To extract and make use of these glitches,  I employed 25 seconds before and after their times of peak amplitude. Note that these samples of glitches also contain background noise that may or may not be Gaussian and stationary in addition to the glitches themselves. Removing background noise from these samples and extracting these glitches require complex methods that were not attainable within the time frame of the writing of this paper. A full catalog documentation of known Virgo/LIGO transient glitches from which these glitches were acquired was provided by Michael Zevin (PhD Candidate at Northwestern University) and the GravitySpy team. \cite{gravityspy}. 
+To extract and make use of these glitches,  I employed 25 seconds before and after their times of peak amplitude. Note that these samples of glitches also contain background noise that may or may not be Gaussian and stationary in addition to the glitches themselves. Removing background noise from these samples and extracting these glitches require complex methods that were not attainable within the time frame of the writing of this paper. A full catalog of known Virgo/LIGO transient glitches from which these glitches were acquired was provided by Michael Zevin (PhD Candidate at Northwestern University) and the GravitySpy team. \cite{gravityspy}. 
 
-For visualization purposes, strain time-series data of the glitches and their Q-transformed spectrograms are shown from FIG.\ 5.\ to FIG.\ 9.\ Note that the Q-transform is a special filter that mirrors the Fourier transform, often used to pick out special features of gravitational wave signals, highlighting signals with higher energy intensities. The mathematical details of this analysis technique can be found in \textit{Chatterji et.\ al (2004)} \cite{qtransform}.  With these 50 seconds long glitch segments in hand, I then proceeded to follow the same injection, recovery, and consistency testing procedures discussed in \textit{subsection \ref{gaussian}}. 
+For visualization purposes, strain time-series data of the glitches and their Q-transformed spectrograms are shown from FIG.\ 5 to FIG.\ 9. Note that the Q-transform is a special filter that mirrors the Fourier transform, often used to pick out special features of gravitational wave signals, highlighting signals with higher energy intensities. The mathematical details of this analysis technique can be found in \textit{Chatterji et.\ al (2004)} \cite{qtransform}.  With these 50 seconds long glitch segments in hand, I then proceeded to follow the same injection, recovery, and consistency testing procedures discussed in \textit{subsection \ref{gaussian}}. 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{reweighted glitch 3.png}
-\caption{This figure shows the resulting reweighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 3. The peak re-weighted SNR remained the same as the previous case with $\hat{\rho}(t)=20.9$ at time $t=35.0$s.}
+\caption{The resulting reweighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 3. The peak re-weighted SNR remained the same as the previous case with $\hat{\rho}(t)=20.9$ at time $t=35.0$s.}
 \centering
 \end{figure}
 
 \begin{figure}[t] \label{snr 4}
 \includegraphics[width = .9\textwidth]{glitch 4 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from Glitch 4. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 21.8$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the injected template signal from Glitch 4. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 21.8$.}
 \centering
 \end{figure}
 
@@ -400,47 +447,47 @@ For visualization purposes, strain time-series data of the glitches and their Q-
 
 On August 14$^{\text{th}}$, 2017, 10:30 UTC, both LIGO detectors in Hanford and Livingston as well as the Virgo Observatory in Italy detected a binary black hole coalescence with initial masses 30.5 $M$\textsubscript{\(\odot\)} and 25.3 $M$\textsubscript{\(\odot\)}, called event GW170814 \cite{blip}. However, just about six seconds before the detection of GW170814 at the LIGO Livingston detector, a \textit{Blip} glitch occurred. Although this \textit{Blip} glitch was quiet and narrow enough so that it did not significantly affect the detection results of event GW170814, it still created a spurious SNR peak in the resulting $\rho(t)$ after matched filtering the data. To address this issue, $\chi^2$-consistency testing and SNR re-weighting were employed. In this paper, I sought to analyze the performance of matched filtering and $\chi^2$-consistency testing in distinguishing between event GW170814 and the \textit{Blip} glitch by analyzing the data and finding the signal myself, using a modified Python script referenced from GWOSC's 2020 Open Data Workshop, Tutorial 2.3 \cite{collaboration2019open}.
 
-First, a 15-second data segment around event GW170814 that includes the blip glitch was queried directly from GWOSC. A visualization of this \textit{Blip} glitch can be found in FIG.\ 10. Then afterwards, matched filtering and $\chi^2$-consistency testing were applied in a similar fasion as described in the previous subsection. In this case, however, since the data segment is much shorter than the 50 seconds duration in the previous section, only 2 seconds of data on the edges were cropped. Using this calculated $\chi_r^2$ statistic, I then performed an SNR re-weighting to obtain $\hat{\rho}(t)$. With this information in hand, I could then evaluate the performance of matched filtering and the $\chi^2$-consistency test.
+First, a 15-second data segment around event GW170814 that includes the blip glitch was queried directly from GWOSC using the \code{fetch\_open\_data} from the Python package \code{gwpy}. A visualization of this \textit{Blip} glitch can be found in FIG.\ 10. Then afterwards, matched filtering and $\chi^2$-consistency testing were applied in a similar fasion as described in the previous subsection. In this case, however, since the data segment is much shorter than the 50 seconds duration in the previous section, only 2 seconds of data on the edges were cropped. Using this calculated $\chi_r^2$ statistic, I then performed an SNR re-weighting to obtain $\hat{\rho}(t)$. With this information in hand, I could then evaluate the performance of matched filtering and the $\chi^2$-consistency test.
 
 
 
-\section{Preliminary Results and Data Analysis} \label{results}
+\section{Results and Data Analysis} \label{results}
 
 \subsection{Results for the case of Gaussian and Laplacian noise}
 Since this template was zero-padded and rolled so that it starts at time $t=35$s referenced from the beginning of the noise/glitch data stretch before being injected, the peak-SNR after matched filtering is expected to be at time $t=35$s. The PyCBC matched filtering and $\chi^2$-consistency testing algorithms yielded reasonable results.
 
-It can be seen from FIG.\ 11.\ and FIG.\ 14.\ for the perfect Gaussian noise and the Laplacian noise with $b=1$ cases that there are clear, thin, and distinct SNR peaks at time $t = 35.0$s. The peak SNR's of these two cases, though, are of different values. In the case of Gaussian noise, the SNR is 20.0, while it is only 12.6 in the case of Laplacian noise with $b=1$. Furthermore, it can also be seen that the SNR `noise-floor' in FIG.\ 11.\ is similar to that in FIG.\ 14. Specifically in both cases, the SNR `noise-floor' varies around $\rho = 3.75$. Looking at the $\chi^2_r$ results for these two cases in FIG. 12.\ and 13.\ (Gaussian noise) and FIG. 15.\ and 16.\ (Laplacian with $b=1$ noise), we can also see some similarities. The $\chi^2_r$ graphs for both cases show a strong dip at the expected time $t=35$s, indicating a strong correlation between high SNR and template contribution. It is also worthy to note that in both of these cases, the $\chi^2_r$ value grows just around the strong dip. The reason for this is because at these times around $t=35$s, the template contributes to the high SNR but does not perfectly align with it \cite{collaboration2019open}. In the Gaussian case, however, the $\chi_r^2$ value climbs to a higher value compared to the Laplacian with $b=1$ case around the expected time (reaching a maximum of $\chi_r^2 \approx 7$ for the Gaussian case and $\chi_r^2\approx 4$ for the Laplacian case with $b=1$). This is also expected since high $\chi_r^2$ values just around a strong dip toward unity indicates that the background noise fits the Gaussian model well.
+It can be seen from FIG.\ 11 and FIG.\ 14 for the perfect Gaussian noise and the Laplacian noise with $b=1$ cases that there are clear, thin, and distinct SNR peaks at time $t = 35.0$s. The peak SNR's of these two cases, though, are of different values. In the case of Gaussian noise, the SNR is 20.0, while it is only 12.6 in the case of Laplacian noise with $b=1$. Furthermore, it can also be seen that the SNR `noise-floor' in FIG.\ 11 is similar to that in FIG.\ 14. Specifically in both cases, the SNR `noise-floor' varies around $\rho = 3.75$. Looking at the $\chi^2_r$ results for these two cases in FIG. 12 and 13 (Gaussian noise) and FIG. 15 and 16 (Laplacian with $b=1$ noise), we can also see some similarities. The $\chi^2_r$ graphs for both cases show a strong dip at the expected time $t=35$s, indicating a strong correlation between high SNR and template contribution. It is also worthy to note that in both of these cases, the $\chi^2_r$ value grows just around the strong dip. The reason for this is because at these times around $t=35$s, the template contributes to the high SNR but does not perfectly align with it \cite{collaboration2019open}. In the Gaussian case, however, the $\chi_r^2$ value climbs to a higher value compared to the Laplacian with $b=1$ case around the expected time (reaching a maximum of $\chi_r^2 \approx 7$ for the Gaussian case and $\chi_r^2\approx 4$ for the Laplacian case with $b=1$). This is also expected since high $\chi_r^2$ values just around a strong dip toward unity indicates that the background noise fits the Gaussian model well.
 
 \begin{figure}
 \includegraphics[width = .9\textwidth]{chi2 glitch 4.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 4. The graph is zoomed in to show just the two-second time interview around the time of expected signal. There is a moderately strong dip toward unity at the expected time $t=35$s.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 4. The graph is zoomed in to show just the two-second time interval around the time of expected signal. There is a moderately strong dip toward unity at the expected time.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{reweighted glitch 4.png}
-\caption{This figure shows the resulting re-weighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 4. The peak re-weighted SNR remained the same as the previous case with $\hat{\rho}(t)=21.8$ at time $t=35.0$s.}
+\caption{The resulting re-weighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 4. The peak re-weighted SNR remained the same as the previous case with $\hat{\rho}(t)=21.8$ at time $t=35.0$s.}
 \centering
 \end{figure}
 
-In the case of Laplacian noise with $b=2$ (FIG.\ 17.), the detection result was also accurate (i.e.\ there is a clear, thin, and distinct peak at time $t=35.0$). However, in this case, the SNR $\rho(t)$ is much lower, reaching only a value of $6.1$. Furthermore, it can be seen that the SNR `noise floor' is also relatively consistent with the Gaussian noise case and the $b=1$ Laplacian noise case, fluctuating around $\rho = 3.0$, though many times reaching $\rho = 4.0$. Looking at FIG. 18.\ and FIG. 19.\ for the $\chi_r^2$ graphs, however, it can be seen that there are distinct differences compared to the Gaussian case or the Laplacian case with $b=1$. In this Laplacian case with $b=2$, the dip toward unity at time $t=35$s is much weaker as $\chi^2_r$ in the region around it does not climb as high, indicating that the noise background is getting less and less Gaussian as expected. 
+In the case of Laplacian noise with $b=2$ (FIG.\ 17), the detection result was also accurate (i.e.\ there is a clear, thin, and distinct peak at time $t=35.0$). However, in this case, the SNR $\rho(t)$ is much lower, reaching only a value of $6.1$. Furthermore, it can be seen that the SNR `noise floor' is also relatively consistent with the Gaussian noise case and the $b=1$ Laplacian noise case, fluctuating around $\rho = 3.0$, though many times reaching $\rho = 4.0$. Looking at FIG. 18 and FIG. 19 for the $\chi_r^2$ graphs, however, it can be seen that there are distinct differences compared to the Gaussian case or the Laplacian case with $b=1$. In this Laplacian case with $b=2$, the dip toward unity at time $t=35$s is much weaker as $\chi^2_r$ in the region around it does not climb as high, indicating that the noise background is getting less and less Gaussian as expected. 
 
-In the case of Laplacian noise with scale parameter $b=3$, however, we can make new interesting observations. As shown in FIG.\ 20., the SNR function $\rho(t)$ has no clear and distinct peaks. Throughout the entire time interval, $\rho(t)$ appears to fluctuate randomly around $\rho = 3$. The function's highest SNR is 4.6, located at time $t=21.7$s, which is clearly inaccurate. However, it is still noteworthy that the SNR value at time $t=35$s is still higher than its surroundings, coming close to the maximum value found at time $t=21.7$s. Looking at FIG.\ 21.\ and FIG.\ 22.\ for the $\chi_r^2$ statistic, we can see that there is a very small dip toward unity at the expected time $t=35$s, indicating that there exists a very weak signal at that time. Note that this dip is a lot weaker compared to the cases of Gaussian noise and Laplacian noise with $b=1,2$ – where the dip is much more apparent even when zoomed out to the entire time interval.
+In the case of Laplacian noise with scale parameter $b=3$, however, we can make new interesting observations. As shown in FIG.\ 20, the SNR function $\rho(t)$ has no clear and distinct peaks. Throughout the entire time interval, $\rho(t)$ appears to fluctuate randomly around $\rho = 3$. The function's highest SNR is 4.6, located at time $t=21.7$s, which is clearly inaccurate. However, it is still noteworthy that the SNR value at time $t=35$s is still higher than its surroundings, coming close to the maximum value found at time $t=21.7$s. Looking at FIG.\ 21 and FIG.\ 22 for the $\chi_r^2$ statistic, we can see that there is a very small dip toward unity at the expected time $t=35$s, indicating that there exists a very weak signal at that time. Note that this dip is a lot weaker compared to the cases of Gaussian noise and Laplacian noise with $b=1,2$ – where the dip is much more apparent even when zoomed out to the entire time interval.
 
 
-Note that in all the four cases presented above (Gaussian noise, Laplacian noise with $b=1$, $b=2$, $b=3$), the reweighted SNR's $\hat{\rho}(t)$ are extremely similar if not identical with $\rho(t)$. In the first three cases – Gaussian, Laplacian with $b=1$, and Laplacian $b=2$ – the explanation is that all of these these three situations already have clear and distinct peaks with close-Gaussian (Laplacian with $b=1$) or perfect Gaussian noise itself. Therefore, the re-weighing function had little effects. In the last case (Laplacian with $b=3$), the re-weighting function had little effects not because the noise is Gaussian or close-Gaussian; rather, it was because the noise was \textit{too loud}, rendering the matched filter's ability to pick the signal out of the noise. Note that the $\chi^2$-cosistency test only re-weighs $\rho(t)$ so that the \textit{detected} signal from matched filtering is amplified, not to dig out signal from louder noise as an \textit{alternative} to matched filtering itself. For this reason, $\hat{\rho}(t)$ graphs for these cases were omitted from this paper.
+Note that in all the four cases presented above (Gaussian noise, Laplacian noise with $b=1$, $b=2$, $b=3$), the reweighted SNR's $\hat{\rho}(t)$ are extremely similar if not identical with $\rho(t)$. In the first three cases – Gaussian, Laplacian with $b=1$, and Laplacian $b=2$ – the explanation is that all of these these three situations already have clear and distinct peaks with close-Gaussian (Laplacian with $b=1$) or perfect Gaussian noise itself. Therefore, the re-weighing function had little effects. In the last case (Laplacian with $b=3$), the re-weighting function had little effects not because the noise is Gaussian or close-Gaussian; rather, it was because the noise was \textit{too loud}, rendering the matched filter's ability to pick the signal out of the noise effectively. Note that the $\chi^2$-cosistency test only re-weighs $\rho(t)$ so that the \textit{detected} signal from matched filtering is amplified, not to dig out signal from louder noise as an \textit{alternative} to matched filtering itself. For this reason, $\hat{\rho}(t)$ graphs for these cases were omitted from this paper.
 
 \begin{widetext}
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{glitch 5 template 1.png}
-\caption{This figure shows the resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the template signal from Glitch 5. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 20.9$.}
+\caption{The resulting cropped SNR $\rho(t)$ after matched filtering was applied to recover the injected template signal from Glitch 5. A signal peak was detected at time $t = 35.0$s with SNR $\rho = 20.9$.}
 \centering
 \end{figure}
 
 \begin{figure}
 \includegraphics[width = .9\textwidth]{chi2 glitch 5.png}
-\caption{This figure shows the resulting $\chi^2_r$ statistic for Glitch 5. The graph is zoomed in to show just the two-second time interview around the time of expected signal. There is a rather strong dip toward unity at the expected time $t=35$s.}
+\caption{The resulting $\chi^2_r$ statistic for Glitch 5. The graph is zoomed in to show just the two-second time interval around the time of expected signal. There is a rather strong dip toward unity at the expected time.}
 \centering
 \end{figure} 
 
@@ -451,27 +498,27 @@ Note that in all the four cases presented above (Gaussian noise, Laplacian noise
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{reweighted glitch 5.png}
-\caption{This figure shows the resulting re-weighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 5. The peak re-weighted SNR remained the same as the previous case with $\hat{\rho}(t)=27.6$ at time $t=35.0$s.}
+\caption{The resulting re-weighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for Glitch 5. The peak re-weighted SNR remained the same as the previous case with $\hat{\rho}(t)=27.6$ at time $t=35.0$s.}
 \centering
 \end{figure}
 
-Figures 23.\ and 24.\ show the detection results for the two \textit{Extremely Loud} glitches (Glitch 1 and Glitch 2). Both of these results share one thing common: They both have an extremely high SNR peak, ranging in the hundreds ($\rho=305.0$ and $\rho=294.6$). It is also worth noticing that these peaks are more triangular / pyramidal in shape – that is, the elevated SNR effects caused by \textit{Extremely Loud} glitches are spread out across multiple frequency bins, and subsequently heavily affect the time-domain data. Moreover, note that in FIG.\ 23., we can see that Glitch 1 also gave rise to several lower amplitude false-alarm SNR peaks in addition the highest peak found at time $t=17.7$s. Similar to the highest peaks, these peaks are more triangular in nature and are of unusually high amplitudes; thus, they can easily be differentiated from real gravitational wave signal. 
+Figures 23 and 24 show the detection results for the two \textit{Extremely Loud} glitches (Glitch 1 and 2). Both of these results share one thing common: They both have an extremely high SNR peak, ranging in the hundreds ($\rho=305.0$ and $\rho=294.6$). It is also worth noticing that these peaks are more triangular / pyramidal in shape – that is, the elevated SNR effects caused by \textit{Extremely Loud} glitches are spread out across multiple frequency bins, and subsequently heavily affect the time-domain data. Moreover, note that in FIG.\ 23, we can see that Glitch 1 also gave rise to several lower amplitude false-alarm SNR peaks in addition to the highest peak found at time $t=17.7$s. Similar to the highest peaks, these peaks are more triangular in nature and are of unusually high amplitudes; thus, they can easily be differentiated from real gravitational wave signal. 
 
-Considering the $\chi^2_r$ graphs for Glitch 1 in FIG.\ 25 and 26, we can see that the $\chi^2_r$ statistic is extremely high and contains no apparent dips at the expected time $t=35$s. This means that the buried signal would likely be missed in a real gravitational wave search if data analysis stopped here. However, considering the re-weighted SNR $\hat{\rho}(t)$ graph in FIG.\ 27., there is a small, but still relatively distinct peak at the expected time $t=35$s. It is also noteworthy to point out that the extremely high signal-to-noise amplitudes caused by the glitch was substantially reduced down to less than 80 from the initial maximum value of 294.6.  FIG. 28.\ and 29.\ shows the  $\chi^2_r$ graphs for Glitch 2. FIG.\ 30.\ shows the re-weighted SNR $\hat{\rho}(t)$ for Glitch 2. The results for Glitch 2 are similar to those of Glitch 1; they both have weak dips toward at the expected time $t=35$s for the $\chi_r^2$ statistic and damped-down glitches SNR after the re-weighting. However, it can be seen that there is a small but relatively distinct peak (more distinct compared to that of Glitch 1) at time $t=35$s, reaching a value of $\hat{\rho}(t)=9.0$ – indicating that a signal is likely to exist at this time for the case of Glitch 2.
+Considering the $\chi^2_r$ graphs for Glitch 1 in FIG.\ 25 and 26, we can see that the $\chi^2_r$ statistic is extremely high and contains no apparent dips at the expected time $t=35$s. This means that the buried signal would likely be missed in a real gravitational wave search if data analysis stopped here. However, considering the re-weighted SNR $\hat{\rho}(t)$ graph in FIG.\ 27, there is a small, but still relatively distinct peak at the expected time $t=35$s, though not enough to claim a detection. It is also noteworthy to point out that the extremely high signal-to-noise amplitudes caused by the glitch was substantially reduced down to less than 80 from the initial maximum value of 294.6.  FIG. 28 and 29 show the  $\chi^2_r$ graphs for Glitch 2. FIG.\ 30 shows the re-weighted SNR $\hat{\rho}(t)$ for Glitch 2. The results for Glitch 2 are similar to those of Glitch 1; they both have weak dips toward unity at the expected time $t=35$s for the $\chi_r^2$ statistic and damped-down glitches SNR after the re-weighting. However, it can be seen that there is a small but relatively distinct peak (more distinct compared to that of Glitch 1) at time $t=35$s, reaching a value of $\hat{\rho}(t)=9.0$ – indicating that a signal is likely to exist at this time for the case of Glitch 2.
 
-Figures 31, 34, and 37 show the SNR results for the recovery of the template signal injected into Glitch 3, 4, and 5, respectively. Notice that all three of these cases resulted in similar peak SNRs, with all three results reaching a signal-to-noise ratio $\rho$ of around $20$. In addition to that, the SNR `noise floor' is similar all across of three cases, fluctuating at around $\rho\approx 4$. Furthermore, considering their $\chi_r^2$ statistic graphs (shown if FIG.\ 32, FIG.\ 35, and FIG.\ 38 for Glitch 3,4,5 respectively) we can see that three of these cases have rather strong and distinct dips toward unity at the expected time $t=35$s with the dip of Glitch 3 being slightly weaker than those of the other two. Note that Glitch 3 is rather spread out on the search-time interval, with concentrated noise power evenly distributed throughout; therefore, the result resulting weaker $\chi_r^2$ dip for Glitch 3 was reasonably expected. Similar to the case of Gaussian and Laplacian noise with $b=1$ and $b=2$, the re-weighting process had very little impact on the detection results for Glitch 3,4, and 5. The re-weighted SNR graphs for Glitch 3,4 and 5 are shown in FIG.\ 33, FIG.\ 36, and FIG.\ 39 respectively. The reason for this is also similar to the known noise distributions case – the original $\rho(t)$ already has a clear and distinct SNR peak and therefore consistency testing had little impact. However, it is worth to point out that the `noise background' in these cases were suppressed by consistency testing, thereby validating our original detection results.  
+Figures 31, 34, and 37 show the SNR results for the recovery of the template signal injected into Glitch 3, 4, and 5, respectively. Notice that all three of these cases resulted in similar peak SNRs, with all three results reaching a signal-to-noise ratio $\rho$ of around $20$. In addition to that, the SNR `noise floor' is similar all across of three cases, fluctuating at around $\rho\approx 4$. Furthermore, considering their $\chi_r^2$ statistic graphs (shown if FIG.\ 32, FIG.\ 35, and FIG.\ 38 for Glitch 3,4,5 respectively) we can see that three of these cases have rather strong and distinct dips toward unity at the expected time $t=35$s with the dip of Glitch 3 being slightly weaker than those of the other two. Note that Glitch 3 is rather spread out on the search-time interval, with concentrated noise power evenly distributed throughout; therefore, the resulting weaker $\chi_r^2$ dip for Glitch 3 was reasonable. Similar to the case of Gaussian and Laplacian noise with $b=1$ and $b=2$, the re-weighting process had very little impact on the detection results for Glitch 3,4, and 5. The re-weighted SNR graphs for Glitch 3,4 and 5 are shown in FIG.\ 33, FIG.\ 36, and FIG.\ 39 respectively. The reason for this is also similar to the known noise distributions case – the original $\rho(t)$ already has a clear and distinct SNR peak and therefore consistency testing had little impact. However, it is worth pointing out that the `noise background' in these cases were suppressed by consistency testing, thereby validating our original detection results.  
 
 \subsection{Results for event GW170814 and the LIGO Livingston \textit{Blip} glitch}
 
 \begin{figure}
 \includegraphics[width = .9\textwidth]{blip orig snr.png}
-\caption{This figure shows the resulting SNR $\rho(t)$ event GW170814 and the nearby \textit{Blip} glitch. The first SNR peak is due to the glitch; it has a value of $\rho\approx12.0$. The second SNR peak is event GW170814; it has a value of $\rho\approx12.9$.}
+\caption{The resulting SNR $\rho(t)$ for event GW170814 and the nearby \textit{Blip} glitch. The first SNR peak is due to the glitch; it has a value of $\rho\approx12.0$. The second SNR peak is event GW170814; it has a value of $\rho\approx12.9$.}
 \centering
 \end{figure} 
 
 \begin{figure}[t]
 \includegraphics[width = .9\textwidth]{blip reweighted.png}
-\caption{This figure shows the resulting re-weighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for event GW170814 and the nearby \textit{Blip} glitch. It can be seen that the initial peak due to the glitch in $\rho(t)$ has `disappeared'.}
+\caption{The resulting re-weighted SNR $\hat{\rho}(t)$ using the computed $\chi^2_r$ statistic for event GW170814 and the nearby \textit{Blip} glitch. It can be seen that the initial peak due to the glitch in $\rho(t)$ has `disappeared'.}
 \centering
 \end{figure}
 
@@ -488,9 +535,7 @@ In the cases of \textit{Scattered Light}, \textit{Power Line}, and \textit{Whist
 In practice, real Virgo/LIGO data analysis procedures already have $\chi^2$-consistency testing and SNR re-weighting incorporated into their procedures where there are `data veto' guidelines based of the computed $\chi^2$ statistic. It has been shown in this paper that such techniques are essential in detecting real gravitational waves from astrophysical sources as in event GW170814. With this being said, however, the challenge lies in picking out real gravitational wave signals when they coincide with transient glitches; an example of this would be event GW170817 at the LIGO Livingston detector where a glitch coincided with the signal. In these cases, ordinary $\chi^2$-consistency testing and SNR re-weighting procedures presented in this paper are not sufficient. Therefore, future research should focus on developing comprehensive mathematical characterization of different classifications of non-Gaussian and transient glitches so that signals can be picked out from such noise backgrounds. Furthermore, considering that this paper has qualitatively demonstrated that there is relationship between the glitch's amplitude to the performance of $\chi^2$-consistency testing, further research could look for a quantitative relationship between these two values.
 
 \section{Summary} \label{summary}
-As mentioned, the detection of gravitational waves is especially challenging and requires extreme precision as well as sophisticated data analysis tools. In this paper, I presented two of the most common and efficient data analysis methods for the detection of gravitational waves – namely, matched filtering and $\chi^2$-consistency testing. I then proceeded to evaluate the performance of these two data analysis tools in different noise conditions while using event GW170814 as an illustrative example. Four consistent noise distributions and 6 different glitches were analyzed. Specifically, I considered Guassian noise, Laplacian noise with $b=1$, Laplacian noise with $b=2$, and Laplacian noise with $b=3$. As for the glitches, I employed 2 \textit{Extremely Loud} glitches, 1 \textit{Scattered Light} glitch, one \textit{Power Line} glitch, one \textit{Whistle} glitch, and one \textit{Blip} glitch (with the \textit{Blip} glitch being found near event GW170814).
-
-Upon evaluation, I found that matched filtering performs best when detector noise is perfectly Gaussian and stationary. Matched filtering also performs considerably well when the noise distribution is close-Gaussian, namely Laplacian with $b=1$ and $b=2$. It was also shown that matched filtering breaks down when noise distributions are tail-heavy (that is, when they have high kurtoses such as the Laplacian with $b=3$ case). Furthermore, it was found that the existence of Extremely Loud glitches causes exceptionally high SNRs that can easily mask out true gravitational wave signals if the glitch and the signal coincide. In contrast, \textit{Scattered Light}, \textit{Power Line}, and \textit{Whistle} glitches are generally not loud enough to mask out true gravitational wave signals; \textit{Blip} glitches, however, can mimic real gravitational wave signals if they don't coincide. Moreover, I found that $\chi^2$-consistency testing has little impact in cases where matched filtering already has favorable results. In such situations, $\chi^2$-consistency testing only improves the confidence of the matched filtering detection. However, in the cases of \textit{Extremely Loud} and \textit{Blip} glitches, where matched filtering does not give accurate results on its own, the use of $\chi^2$-consistency testing is crucial in being able to pick out true gravitational wave signals. 
+The detection of gravitational waves is especially challenging and requires extreme precision as well as sophisticated data analysis tools. In this paper, I presented two of the most common and efficient data analysis methods for the detection of gravitational waves – namely, matched filtering and $\chi^2$-consistency testing. I then proceeded to evaluate the performance of these two data analysis tools in different noise conditions while using event GW170814 as an illustrative example. Four consistent noise distributions and 6 different glitches were analyzed. Specifically, I considered Guassian noise, Laplacian noise with $b=1$, Laplacian noise with $b=2$, and Laplacian noise with $b=3$. As for the glitches, I employed 2 \textit{Extremely Loud} glitches, 1 \textit{Scattered Light} glitch, one \textit{Power Line} glitch, one \textit{Whistle} glitch, and one \textit{Blip} glitch (with the \textit{Blip} glitch being found near event GW170814). Upon evaluation, I found that matched filtering performs best when detector noise is perfectly Gaussian and stationary. Matched filtering also performs considerably well when the noise distribution is close-Gaussian, namely Laplacian with $b=1$ and $b=2$. It was also shown that matched filtering breaks down when noise distributions are tail-heavy (that is, when they have high kurtoses such as the Laplacian with $b=3$ case). Furthermore, it was found that the existence of Extremely Loud glitches causes exceptionally high SNRs that can easily mask out true gravitational wave signals if the glitch and the signal coincide. In contrast, \textit{Scattered Light}, \textit{Power Line}, and \textit{Whistle} glitches are generally not loud enough to mask out true gravitational wave signals; \textit{Blip} glitches, however, can mimic real gravitational wave signals if they don't coincide. Moreover, I found that $\chi^2$-consistency testing has little impact in cases where matched filtering already has favorable results. In such situations, $\chi^2$-consistency testing only improves the confidence of the matched filtering detection. However, in the cases of \textit{Extremely Loud} and \textit{Blip} glitches, where matched filtering does not give accurate results on its own, the use of $\chi^2$-consistency testing is crucial in being able to pick out true gravitational wave signals. 
 
 \begin{acknowledgments}
 I would like to express my sincerest gratitude to Dr.\ Eric Myers at the State University of New York, New Paltz for guiding me at every step of the way in the making of this paper. Dr. Myers has guided me through my research from the very start, from teaching me the basic background knowledge to helping me with the writing process. I could not be more grateful of Dr.\ Myers' mentorship.
